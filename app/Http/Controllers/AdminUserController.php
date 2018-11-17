@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UsersRequest;
 use App\User;
 use App\Role;
+use App\Photo;
 
 use Illuminate\Http\Request;
 
@@ -43,8 +44,25 @@ class AdminUserController extends Controller
      */
     public function store(UsersRequest $request)
     {
-      User::create($request->all());
+      $input = $request->all();
 
+      if($file = $request->file('photo_id')){
+        $name = time() . $file->getClientOriginalName();
+
+        $file->move('images', $name);
+
+        $photo = Photo::create(['file'=>$name]);
+
+        $input['photo_id'] = $photo->id;
+      }
+
+      $input['password'] = bcrypt($request->password);
+
+      User::create($input);
+
+
+      // User::create($request->all());
+      //
       return redirect('/admin/users');
 
       // return $request->all();
@@ -69,7 +87,11 @@ class AdminUserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $roles = Role::lists('name', 'id')->all();
+
+        return view('admin.users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -81,7 +103,7 @@ class AdminUserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      return $request->all();
     }
 
     /**
