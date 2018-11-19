@@ -24,7 +24,7 @@ class PostCreateRequest extends Request
     public function rules()
     {
         return [
-          'photo_id'=>'required',
+          // 'photo_id'=>'required',
           'category_id'=>'required',
           'title'=>'required',
           'body'=>'required'
