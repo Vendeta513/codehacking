@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UsersRequest;
 use App\Http\Requests\UserEditRequest;
+use Illuminate\Support\Facades\Session;
 use App\User;
 use App\Role;
 use App\Photo;
@@ -92,6 +93,7 @@ class AdminUserController extends Controller
 
         $roles = Role::lists('name', 'id')->all();
 
+
         return view('admin.users.edit', compact('user', 'roles'));
     }
 
@@ -119,7 +121,11 @@ class AdminUserController extends Controller
 
       }
 
+      $input['password'] = bcrypt($input['password']);
+
       $user->update($input);
+
+      Session::flash('updated_user', 'User has been updated');
 
       return redirect('/admin/users');
     }
@@ -132,6 +138,24 @@ class AdminUserController extends Controller
      */
     public function destroy($id)
     {
-        //
+      $user = User::findOrFail($id);
+
+
+      $photo_id = $user->photo_id;
+
+      $photo = Photo::find($photo_id);
+
+
+      unlink(public_path() . $user->photo->file);
+
+
+      $photo->delete();
+
+      $user->delete();
+
+      Session::flash('deleted_user', "User has been deleted");
+
+      return redirect('/admin/users');
+
     }
 }
