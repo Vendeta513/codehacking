@@ -21,6 +21,8 @@
         <th>Category</th>
         <th>Title</th>
         <th>Body</th>
+        <th>View Post</th>
+        <th>View Comment/s</th>
         <th>Created</th>
         <th>Updated</th>
       </tr>
@@ -36,6 +38,8 @@
             <td>{{$post->category ? $post->category->name : 'no category'}}</td>
             <td>{{$post->title}}</td>
             <td>{{$post->body}}</td>
+            <td><a href="{{route('blog.post', $post->slug)}}">View Post</a></td>
+            <td><a href="{{route('admin.comments.show', $post->id)}}">View Comment/s</a></td>
             <td>{{$post->created_at->diffForHumans()}}</td>
             <td>{{$post->updated_at->diffForHumans()}}</td>
           </tr>
@@ -44,5 +48,9 @@
         @endif
     </tbody>
   </table>
+
+  <div class="col-sm-6">
+    {{$posts->render()}}
+  </div>
 
 @endsection

@@ -22,7 +22,7 @@ class AdminPostsController extends Controller
      */
     public function index()
     {
-      $posts = Post::all();
+      $posts = Post::paginate(2);
       return view('admin.posts.index', compact('posts'));
     }
 
@@ -103,6 +103,7 @@ class AdminPostsController extends Controller
     public function update(PostCreateRequest $request, $id)
     {
 
+      // return $request->all();
       $input = $request->all();
 
       if($file = $request->file('photo_id')){
@@ -146,5 +147,15 @@ class AdminPostsController extends Controller
 
       return redirect('/admin/posts');
 
+    }
+
+
+    public function post($slug){
+
+      $post = Post::findBySlugOrFail($slug);
+
+      $comments = $post->comments()->where('is_active', 1)->get();
+
+      return view('post', compact('user', 'post', 'comments'));
     }
 }
