@@ -38,11 +38,15 @@
 
             <td>{{$user->role->name}}</td>
             <td>{{$user->is_active == 1 ? 'Active':'Not Active'}}</td>
-            <td>{{$user->created_at->timezone('Asia/Manila')->format('m/d/Y H:i')}}</td>
-            <td>{{$user->updated_at->timezone('Asia/Manila')->format('m/d/Y H:i')}}</td>
+            <td>{{$user->created_at ? $user->created_at->timezone('Asia/Manila')->format('m/d/Y H:i') : 'no date'}}</td>
+            <td>{{$user->updated_at ? $user->updated_at->timezone('Asia/Manila')->format('m/d/Y H:i') : 'no date'}}</td>
           </tr>
         @endforeach
       @endif
     </tbody>
   </table>
+
+  <div class="">
+    {{$users->render()}}
+  </div>
 @endsection
