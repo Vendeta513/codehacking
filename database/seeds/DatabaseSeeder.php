@@ -11,12 +11,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-      // factory(App\Role::class)->create();
-      //
-      // factory(App\Category::class, 4)->create();
-      //
-      // factory(App\User::class)->create();
+      factory(App\Role::class)->create();
 
-        $this->call(RolesTableSeeder::class);
+      factory(App\Category::class, 4)->create();
+
+      factory(App\User::class)->create();
+
+        // $this->call(RolesTableSeeder::class);
     }
 }
