@@ -26,7 +26,6 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 $factory->define(App\Post::class, function(Faker\Generator $faker){
     return [
         'user_id' => $faker->numberBetween(1, 5),
-        'photo_id' => 1,
         'category_id' => $faker->numberBetween(1, 4),
         'title' => $faker->sentence,
         'body' => $faker->text,
@@ -34,13 +33,6 @@ $factory->define(App\Post::class, function(Faker\Generator $faker){
     ];
 });
 
-
-//
-$factory->define(App\Photo::class, function(Faker\Generator $faker){
-  return [
-    'file' => 'placeholder.jpeg'
-  ];
-});
 //
 //
 $factory->define(App\Category::class, function(Faker\Generator $faker){

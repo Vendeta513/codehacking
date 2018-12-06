@@ -12,15 +12,18 @@
       <p class="alert alert-danger">{{session('deleted_post')}}</p>
     @endif
 
+    @if (Session::has('post_updated'))
+      <p class="alert alert-success">{{session('post_updated')}}</p>
+    @endif
+
     <table class="table table-bordered">
     <thead>
       <tr>
         <th>Id</th>
         <th>Photo</th>
+        <th>Title</th>
         <th>Owner</th>
         <th>Category</th>
-        <th>Title</th>
-        <th>Body</th>
         <th>View Post</th>
         <th>View Comment/s</th>
         <th>Created</th>
@@ -34,10 +37,9 @@
           <tr>
             <td>{{$post->id}}</td>
             <td><img height="50" src="{{$post->photo ? $post->photo->file : 'https://via.placeholder.com/400'}}" alt=""></td>
-            <td><a href="{{route('admin.posts.edit', $post->id)}}">{{$post->user->name}}</a></td>
+            <td> <a href="{{route('admin.posts.edit', $post->id)}}"> {{$post->title}}</a></td>
+            <td>{{$post->user->name}}</td>
             <td>{{$post->category ? $post->category->name : 'no category'}}</td>
-            <td>{{$post->title}}</td>
-            <td> {!! $post->body !!}</td>
             <td><a href="{{route('blog.post', $post->slug)}}">View Post</a></td>
             <td><a href="{{route('admin.comments.show', $post->id)}}">View Comment/s</a></td>
             <td>{{$post->created_at->diffForHumans()}}</td>

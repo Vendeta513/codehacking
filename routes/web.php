@@ -11,20 +11,19 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@index');
 
 
 // Route::auth();
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
+Route::get('/home', ['as'=>'home', 'uses'=>'HomeController@index']);
 Route::get('/logout', 'Auth\LoginController@logout');
-Route::get('/post/{id}', ['as'=>'blog.post', 'uses'=>'AdminPostsController@post']);
-
-
+Route::get('/post/{slug}', ['as'=>'blog.post', 'uses'=>'HomeController@post']);
+Route::post('/post/comment', 'PostCommentsController@postComment');
+Route::post('/create/user', 'AdminUserController@createUser');
+Route::get('/userprofile/{id}', ['as'=>'user_profile', 'uses'=>'AdminUserController@userProfile']);
 
 
 Route::group(['middleware'=>'admin'], function(){
@@ -65,9 +64,7 @@ Route::group(['middleware'=>'admin'], function(){
       'show'=>'admin.comment.replies.show'
   ]]);
 
-  Route::get('/admin', function(){
-    return view('admin.index');
-  });
+  Route::get('/admin', ['as'=>'admin.index', 'uses'=>'AdminController@index']);
 });
 
 

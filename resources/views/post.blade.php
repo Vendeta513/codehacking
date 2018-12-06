@@ -30,7 +30,7 @@
 
       <!-- Blog Comments -->
 
-      {{-- @if (Auth::check())
+      @if (Auth::check())
 
 
         <!-- Comments Form -->
@@ -41,7 +41,7 @@
               <p>{{session('comment_posted')}}</p>
             @endif
 
-            {!! Form::open(['method'=>'POST', 'action'=>['PostCommentsController@store']]) !!}
+            {!! Form::open(['method'=>'POST', 'action'=>['PostCommentsController@postComment']]) !!}
               <input type="hidden" name="post_id" value="{{$post->id}}">
               <div class="form-group">
                 {!! Form::textarea('body', null, ['class'=>'form-control', 'rows'=>3]) !!}
@@ -121,9 +121,9 @@
           <!-- Comment -->
         @endforeach
 
-      @endif --}}
+      @endif
 
-      <div id="disqus_thread"></div>
+      {{-- <div id="disqus_thread"></div>
       <script>
 
       /**
@@ -145,7 +145,7 @@
       <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 
-      <script id="dsq-count-scr" src="//codehacking-lthf1qparp.disqus.com/count.js" async></script>
+      <script id="dsq-count-scr" src="//codehacking-lthf1qparp.disqus.com/count.js" async></script> --}}
 @endsection
 
 

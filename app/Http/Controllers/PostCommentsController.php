@@ -41,23 +41,23 @@ class PostCommentsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-      $user = Auth::user();
-      $data = [
-        'post_id'=>$request->post_id,
-        'author'=>$user->name,
-        'photo'=>$user->photo->file,
-        'email'=>$user->email,
-        'body'=>$request->body,
-      ];
-
-      Comment::create($data);
-
-      Session::flash('comment_posted', 'Your comment has been submitted.');
-
-      return redirect()->back();
-    }
+    // public function store(Request $request)
+    // {
+    //   $user = Auth::user();
+    //   $data = [
+    //     'post_id'=>$request->post_id,
+    //     'author'=>$user->name,
+    //     'photo'=>$user->photo->file,
+    //     'email'=>$user->email,
+    //     'body'=>$request->body,
+    //   ];
+    //
+    //   Comment::create($data);
+    //
+    //   Session::flash('comment_posted', 'Your comment has been submitted.');
+    //
+    //   return redirect()->back();
+    // }
 
     /**
      * Display the specified resource.
@@ -109,6 +109,24 @@ class PostCommentsController extends Controller
     {
       Comment::findOrFail($id)->delete();
 
+      return redirect()->back();
+    }
+
+    public function postComment(Request $request){
+      $user = Auth::user();
+
+      $data = [
+        'post_id' => $request->post_id,
+        'author' => $user->name,
+        'photo' => $user->photo ? $user->photo->file : "http://placehold.it/900x300",
+        'email' => $user->email,
+        'body' => $request->body
+      ];
+
+
+      Comment::create($data);
+
+      Session::flash('comment_posted', 'Your comment was successfully posted waiting for moderation');
       return redirect()->back();
     }
 }

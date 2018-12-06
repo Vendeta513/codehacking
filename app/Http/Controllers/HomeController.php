@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
+use App\Comment;
+use App\Category;
+use App\Post;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 
@@ -24,6 +28,19 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $user = Auth::user();
+        $categories = Category::all();
+        $posts = Post::paginate(2);
+        return view('front.home', compact('posts', 'categories', 'user'));
+    }
+
+    public function post($slug){
+      $user = Auth::user();
+      $categories = Category::all();
+      $post = Post::findBySlugOrFail($slug);
+
+      $comments = $post->comments()->where('is_active', 1)->get();
+
+      return view('post', compact('categories', 'post', 'comments', 'user'));
     }
 }

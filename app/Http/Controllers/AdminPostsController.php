@@ -114,6 +114,8 @@ class AdminPostsController extends Controller
       }
 
       Auth::user()->posts()->whereId($id)->first()->update($input);
+
+      Session::flash('post_updated', 'Post was successfully updated.');
       return redirect('/admin/posts');
 
     }
@@ -147,15 +149,5 @@ class AdminPostsController extends Controller
 
       return redirect('/admin/posts');
 
-    }
-
-
-    public function post($id){
-
-      $post = Post::findBySlugOrFail($id);
-
-      $comments = $post->comments()->where('is_active', 1)->get();
-
-      return view('post', compact('user', 'post', 'comments'));
     }
 }

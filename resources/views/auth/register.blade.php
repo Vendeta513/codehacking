@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.blog-home')
 
 @section('content')
 <div class="container">
@@ -6,8 +6,42 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">Register</div>
+                @if (Session::has('user_created'))
+                  <p class="alert alert-success">{{session('user_created')}}</p>
+                @endif
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
+                  {!! Form::open(['method'=>'POST', 'action'=>'AdminUserController@createUser', 'files'=>true]) !!}
+                    <div class="form-group">
+                      {!! Form::label('name', 'Name') !!}
+                      {!! Form::text('name', null, ['class'=>'form-control']) !!}
+                    </div>
+
+                    <div class="form-group">
+                      {!! Form::label('photo_id', 'Photo') !!}
+                      {!! Form::file('photo_id', ['class'=>'form-control']) !!}
+                    </div>
+                    <div class="form-group">
+                      {!! Form::label('email', 'Email') !!}
+                      {!! Form::email('email', null, ['class'=>'form-control']) !!}
+                    </div>
+                    <div class="form-group">
+                      {!! Form::label('role_id', 'Role') !!}
+                      {!! Form::select('role_id', [''=>'Choose role', 2=>'Subscriber', 3=>'Author'], 0, ['class'=>'form-control']) !!}
+                    </div>
+                    <div class="form-group">
+                      {!! Form::label('is_active', 'Status') !!}
+                      {!! Form::select('is_active', [0=>'Active', 1=>'Not Active'], 0, ['class'=>'form-control']) !!}
+                    </div>
+                    <div class="form-group">
+                      {!! Form::label('password', 'Password') !!}
+                      {!! Form::password('password', ['class'=>'form-control']) !!}
+                    </div>
+                    <div class="form-group">
+                      {!! Form::submit('Register', ['class'=>'btn btn-primary']) !!}
+                    </div>
+
+                  {!! Form::close() !!}
+                    {{-- <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -73,7 +107,7 @@
                                 </button>
                             </div>
                         </div>
-                    </form>
+                    </form> --}}
                 </div>
             </div>
         </div>

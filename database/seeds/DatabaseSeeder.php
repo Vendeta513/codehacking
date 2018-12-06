@@ -13,8 +13,6 @@ class DatabaseSeeder extends Seeder
     {
       factory(App\Role::class, 3)->create();
 
-      factory(App\Photo::class, 1)->create();
-
       factory(App\Category::class, 4)->create();
 
       factory(App\User::class, 5)->create()->each(function($user){

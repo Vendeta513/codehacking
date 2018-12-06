@@ -53,7 +53,7 @@
 @endsection
 
 
-@section('footer')
+@section('scripts')
   <script>
     $(document).ready(function(){
       $("#choices").click(function(){
