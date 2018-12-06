@@ -43,6 +43,6 @@ $factory->define(App\Category::class, function(Faker\Generator $faker){
 
 $factory->define(App\Role::class, function(Faker\Generator $faker){
   return [
-    'name'=> "administrator"
+    'name'=> $faker->randomElement(['subscriber', 'author']);
   ];
 });
