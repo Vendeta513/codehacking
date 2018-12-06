@@ -59,6 +59,9 @@
               <div class="profile-content">
   			        <h1>Create new Blog</h1>
               </div>
+              <div class="">
+                
+              </div>
   		</div>
   	</div>
   </div>
