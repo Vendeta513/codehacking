@@ -13,25 +13,25 @@
 
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
-        'role_id' => $faker->numberBetween(1, 3),
-        'is_active' => $faker->numberBetween(0, 1),
-        'name' => $faker->name,
-        'email' => $faker->safeEmail,
+        'role_id' => 1,
+        'is_active' => 1,
+        'name' => "Keen Corsiga",
+        'email' => "keencorsiga21@gmail.com",
         'password' => bcrypt(112233),
         'remember_token' => str_random(12)
     ];
 });
 
 
-$factory->define(App\Post::class, function(Faker\Generator $faker){
-    return [
-        'user_id' => $faker->numberBetween(1, 5),
-        'category_id' => $faker->numberBetween(1, 4),
-        'title' => $faker->sentence,
-        'body' => $faker->text,
-        'slug' => $faker->slug()
-    ];
-});
+// $factory->define(App\Post::class, function(Faker\Generator $faker){
+//     return [
+//         'user_id' => $faker->numberBetween(1, 5),
+//         'category_id' => $faker->numberBetween(1, 4),
+//         'title' => $faker->sentence,
+//         'body' => $faker->text,
+//         'slug' => $faker->slug()
+//     ];
+// });
 
 //
 //
@@ -43,6 +43,6 @@ $factory->define(App\Category::class, function(Faker\Generator $faker){
 
 $factory->define(App\Role::class, function(Faker\Generator $faker){
   return [
-    'name'=> $faker->randomElement(['administrator', 'subscriber', 'author'])
+    'name'=> "administrator"
   ];
 });
