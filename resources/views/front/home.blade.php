@@ -15,7 +15,7 @@
         <hr>
         <img class="img-responsive" src="{{$post->photo ? $post->photo->file : "http://placehold.it/900x300" }}" alt="">
         <hr>
-        <p>{!! str_limit($post->body, 5) !!}</p>
+        <p>{!! str_limit($post->body, 15, '(...)') !!}</p>
         <a class="btn btn-primary" href="{{route('blog.post', $post->slug)}}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
 
         <hr>

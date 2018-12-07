@@ -10,6 +10,7 @@ use App\User;
 use App\Role;
 use App\Photo;
 use App\Category;
+use App\Post;
 
 use Illuminate\Http\Request;
 
@@ -185,8 +186,10 @@ class AdminUserController extends Controller
     }
 
     public function userProfile($id){
+      $posts = Post::paginate();
       $user = Auth::user();
+      $blog_categories = Category::pluck('name', 'id')->all();
       $categories = Category::all();
-      return view('user_profile', compact('user', 'categories'));
+      return view('user_profile', compact('user', 'categories', 'blog_categories', 'posts'));
     }
 }

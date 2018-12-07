@@ -24,7 +24,7 @@ Route::get('/post/{slug}', ['as'=>'blog.post', 'uses'=>'HomeController@post']);
 Route::post('/post/comment', 'PostCommentsController@postComment');
 Route::post('/create/user', 'AdminUserController@createUser');
 Route::get('/userprofile/{id}', ['as'=>'user_profile', 'uses'=>'AdminUserController@userProfile']);
-
+Route::post('/create/post', 'AdminPostsController@createPost');
 
 Route::group(['middleware'=>'admin'], function(){
 
