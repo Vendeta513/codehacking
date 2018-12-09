@@ -26,7 +26,7 @@
                     </div>
                     <div class="form-group">
                       {!! Form::label('role_id', 'Role') !!}
-                      {!! Form::select('role_id', [''=>'Choose role', 2=>'Subscriber', 3=>'Author'], 0, ['class'=>'form-control']) !!}
+                      {!! Form::select('role_id', [''=>'Choose role', 1=>'Administrator', 2=>'Subscriber', 3=>'Author'], 0, ['class'=>'form-control']) !!}
                     </div>
                     <div class="form-group">
                       {!! Form::label('is_active', 'Status') !!}
