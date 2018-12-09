@@ -8,7 +8,7 @@
   			<div class="profile-sidebar">
   				<!-- SIDEBAR USERPIC -->
   				<div class="profile-userpic">
-  					<img src="{{$user->photo ? $user->photo->file : 'http://placehold.it/64x64'}}" class="img-responsive img-rounded" alt="">
+  					<img src="{{$user->photo ? $user->photo->file : 'http://placehold.it/165x165'}}" class="img-responsive img-rounded" alt="">
   				</div>
   				<!-- END SIDEBAR USERPIC -->
   				<!-- SIDEBAR USER TITLE -->
