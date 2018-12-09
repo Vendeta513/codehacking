@@ -9,7 +9,7 @@
 
       <!-- Author -->
       <p class="lead">
-          by <a href="#">{{$post->user->name}}</a>
+          by {{$post->user->name}}
       </p>
 
       <hr>
@@ -60,7 +60,7 @@
           <!-- Comment -->
           <div class="media">
             <a class="pull-left" href="#">
-              <img class="media-object" height="64" src="{{$comment->photo ? $comment->photo : 'https://via.placeholder.com/64' }} " alt="">
+              <img class="media-object" height="64" src="{{$comment->photo }} " alt="">
             </a>
             <div class="media-body">
               <h4 class="media-heading">{{$comment->author}}

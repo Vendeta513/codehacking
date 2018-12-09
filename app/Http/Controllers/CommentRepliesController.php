@@ -105,7 +105,7 @@ class CommentRepliesController extends Controller
       $data = [
         'comment_id'=>$request->comment_id,
         'author'=>$user->name,
-        'photo'=>$user->photo->file,
+        'photo'=>$user->photo ? $user->photo->file : 'http://placehold.it/64x64',
         'email'=>$user->email,
         'body'=>$request->body
       ];

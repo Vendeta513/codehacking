@@ -118,7 +118,7 @@ class PostCommentsController extends Controller
       $data = [
         'post_id' => $request->post_id,
         'author' => $user->name,
-        'photo' => $user->photo ? $user->photo->file : "http://placehold.it/900x300",
+        'photo' => $user->photo ? $user->photo->file : 'http://placehold.it/64x64',
         'email' => $user->email,
         'body' => $request->body
       ];
