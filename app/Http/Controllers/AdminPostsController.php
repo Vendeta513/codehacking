@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\PostCreateRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 use App\Http\Requests;
 
@@ -44,28 +45,51 @@ class AdminPostsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PostCreateRequest $request)
-    {
-      $input = $request->all();
 
+    public function store(PostCreateRequest $request){
       $user = Auth::user();
 
+      $input = $request->all();
+
       if($file = $request->file('photo_id')){
-        $name = time() . $file->getClientOriginalName();
-
-        $file->move('images', $name);
-
+        $filewithExtension = $file->getClientOriginalName();
+        $filename = pathinfo($filewithExtension, PATHINFO_FILENAME);
+        $extension = $file->getClientOriginalExtension();
+        $name = $filename . '_' . time() . '.' . $extension;
+        Storage::disk('s3')->put($name, fopen($file, 'r+'), 'public');
         $photo = Photo::create(['file'=>$name]);
-
         $input['photo_id'] = $photo->id;
       }
 
       $user->posts()->create($input);
 
-      Session::flash('created_post', 'Post was successfully created.');
+      Session::flash('created_post', 'Post successfully created');
 
       return redirect('/admin/posts');
+
     }
+    // public function store(PostCreateRequest $request)
+    // {
+    //   $input = $request->all();
+    //
+    //   $user = Auth::user();
+    //
+    //   if($file = $request->file('photo_id')){
+    //     $name = time() . $file->getClientOriginalName();
+    //
+    //     $file->move('images', $name);
+    //
+    //     $photo = Photo::create(['file'=>$name]);
+    //
+    //     $input['photo_id'] = $photo->id;
+    //   }
+    //
+    //   $user->posts()->create($input);
+    //
+    //   Session::flash('created_post', 'Post was successfully created.');
+    //
+    //   return redirect('/admin/posts');
+    // }
 
     /**
      * Display the specified resource.
@@ -89,8 +113,8 @@ class AdminPostsController extends Controller
       $post = Post::findOrFail($id);
 
       $categories = Category::pluck('name', 'id')->all();
-
-      return view('admin.posts.edit', compact('post', 'categories'));
+      $url = Storage::disk('s3')->url($post->photo->file);
+      return view('admin.posts.edit', compact('post', 'categories', 'url'));
     }
 
     /**
@@ -100,24 +124,27 @@ class AdminPostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(PostCreateRequest $request, $id)
-    {
-
-      // return $request->all();
+    public function update(PostCreateRequest $request, $id){
       $input = $request->all();
-
+      $user = Auth::user();
+      $post = Post::findOrFail($id);
       if($file = $request->file('photo_id')){
-        $name = time() . $file->getClientOriginalName();
-        $file->move('images', $name);
+        if($post->photo_id != 0){
+          $photo = Photo::findOrFail($post->photo_id);
+          Storage::disk('s3')->delete($post->photo->file);
+          $photo->delete();
+        }
+        $filewithExtension = $file->getClientOriginalName();
+        $filename = pathinfo($filewithExtension, PATHINFO_FILENAME);
+        $extension = $file->getClientOriginalExtension();
+        $name = $filename . '_' . time() . '.' . $extension;
+        Storage::disk('s3')->put($name, fopen($file, 'r+'), 'public');
         $photo = Photo::create(['file'=>$name]);
         $input['photo_id'] = $photo->id;
       }
-
-      Auth::user()->posts()->whereId($id)->first()->update($input);
-
-      Session::flash('post_updated', 'Post was successfully updated.');
+      $user->posts()->where('id', $id)->first()->update($input);
+      Session::flash('post_update', 'Post successfully updated');
       return redirect('/admin/posts');
-
     }
 
     /**
@@ -126,50 +153,54 @@ class AdminPostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-
+    public function destroy($id){
       $post = Post::findOrFail($id);
-
+      $user = Auth::user();
       if($post->photo_id != 0){
         $photo_id = $post->photo_id;
-
-        $photo = Photo::find($photo_id);
-
-        unlink(public_path() . $post->photo->file);
-
+        $photo = Photo::findOrFail($photo_id);
+        Storage::disk('s3')->delete($post->photo->file);
         $photo->delete();
-
       }
-
-
-      Auth::user()->posts()->whereId($id)->delete();
-
-      Session::flash('deleted_post', 'Post has been Deleted.');
-
+      $user->posts()->whereId($id)->delete();
+      Session::flash('deleted_post', 'Post successfully deleted.');
       return redirect('/admin/posts');
-
     }
-
 
     public function createPost(PostCreateRequest $request){
-
       $input = $request->all();
-
       $user = Auth::user();
-
       if($file = $request->file('photo_id')){
-        $name = time() . $file->getClientOriginalName();
-
-        $file->move('images', $name);
-
+        $filewithExtension = $file->getClientOriginalName();
+        $filename = pathinfo($filewithExtension, PATHINFO_FILENAME);
+        $extension = $file->getClientOriginalExtension();
+        $name = $filename . '_' . time() . '.' . $filename;
+        Storage::disk('s3')->put($name, fopen($file, 'r+'), 'public');
         $photo = Photo::create(['file'=>$name]);
-
         $input['photo_id'] = $photo->id;
       }
-
       $user->posts()->create($input);
-      Session::flash('post_created', 'Post successfully created');
       return redirect()->back();
     }
+
+    // public function createPost(PostCreateRequest $request){
+    //
+    //   $input = $request->all();
+    //
+    //   $user = Auth::user();
+    //
+    //   if($file = $request->file('photo_id')){
+    //     $name = time() . $file->getClientOriginalName();
+    //
+    //     $file->move('images', $name);
+    //
+    //     $photo = Photo::create(['file'=>$name]);
+    //
+    //     $input['photo_id'] = $photo->id;
+    //   }
+    //
+    //   $user->posts()->create($input);
+    //   Session::flash('post_created', 'Post successfully created');
+    //   return redirect()->back();
+    // }
 }

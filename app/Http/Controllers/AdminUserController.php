@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UsersRequest;
 use App\Http\Requests\UserEditRequest;
@@ -11,6 +12,7 @@ use App\Role;
 use App\Photo;
 use App\Category;
 use App\Post;
+
 
 use Illuminate\Http\Request;
 
@@ -47,14 +49,16 @@ class AdminUserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UsersRequest $request)
-    {
+    public function store(UsersRequest $request){
       $input = $request->all();
 
       if($file = $request->file('photo_id')){
-        $name = time() . $file->getClientOriginalName();
+        $filewithExtension  = $file->getClientOriginalName();
+        $filename = pathinfo($filewithExtension, PATHINFO_FILENAME);
+        $extension = $file->getClientOriginalExtension();
+        $name = $filename . '_' . time() . '.' . $extension;
 
-        $file->move('images', $name);
+        Storage::disk('s3')->put($name, fopen($file, 'r+'), 'public');
 
         $photo = Photo::create(['file'=>$name]);
 
@@ -65,12 +69,9 @@ class AdminUserController extends Controller
 
       User::create($input);
 
+      Session::flash('user_created', 'User successfully created');
 
-      // User::create($request->all());
-      //
       return redirect('/admin/users');
-
-      // return $request->all();
     }
 
     /**
@@ -96,8 +97,8 @@ class AdminUserController extends Controller
 
         $roles = Role::pluck('name', 'id')->all();
 
-
-        return view('admin.users.edit', compact('user', 'roles'));
+        $url = $user->photo ? Storage::disk('s3')->url($user->photo->file) : 'http://placehold.it/200x200';
+        return view('admin.users.edit', compact('user', 'roles', 'url'));
     }
 
     /**
@@ -107,29 +108,36 @@ class AdminUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserEditRequest $request, $id)
-    {
+
+    public function update(UsersRequest $request, $id){
       $user = User::findOrFail($id);
 
       $input = $request->all();
 
       if($file = $request->file('photo_id')){
-        $name = time() . $file->getClientOriginalName();
+        if($user->photo_id != 0){
+          $photo_id = $user->photo_id;
+          $photo = Photo::findOrFail($photo_id);
+          Storage::disk('s3')->delete($user->photo->file);
+          $photo->delete();
+        }
+        $filewithExtension = $file->getClientOriginalName();
+        $filename = pathinfo($filewithExtension, PATHINFO_FILENAME);
+        $extension = $file->getClientOriginalExtension();
 
-        $file->move('images', $name);
+        $name = $filename . '_' . time() . '.' . $extension;
+
+        Storage::disk('s3')->put($name, fopen($file, 'r+'), 'public');
 
         $photo = Photo::create(['file'=>$name]);
 
         $input['photo_id'] = $photo->id;
-
       }
 
-      $input['password'] = bcrypt($input['password']);
+      $input['password'] = bcrypt($request->password);
 
       $user->update($input);
-
-      Session::flash('updated_user', 'User has been updated');
-
+      Session::flash('updated_user', 'User successfully updated');
       return redirect('/admin/users');
     }
 
@@ -139,57 +147,58 @@ class AdminUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+
+    public function destroy($id){
       $user = User::findOrFail($id);
 
-
-      if ($user->photo_id != 0) {
-
+      if($user->photo_id != 0){
         $photo_id = $user->photo_id;
+        $photo = Photo::findOrFail($photo_id);
 
-        $photo = Photo::find($photo_id);
-
-
-        unlink(public_path() . $user->photo->file);
-
-
+        Storage::disk('s3')->delete($user->photo->file);
         $photo->delete();
       }
 
-
       $user->delete();
-
-      Session::flash('deleted_user', "User has been deleted");
-
+      Session::flash('deleted_user', 'User successfully deleted');
       return redirect('/admin/users');
-
     }
 
     public function createUser(UsersRequest $request){
-      $input = $request->all();
 
-      if($file = $request->file('photo_id')){
-        $name = time() . $file->getClientOriginalName();
-        $file->move('images', $name);
+       $input = $request->all();
 
-        $photo = Photo::create(['file'=>$name]);
-        $input['photo_id'] = $photo->id;
-      }
+       if($file = $request->file('photo_id')){
+         $filewithExtension = $file->getClientOriginalName();
+         $filename = pathinfo($filewithExtension, PATHINFO_FILENAME);
+         $extension = $file->getClientOriginalExtension();
 
-      $input['password'] = bcrypt($request->password);
+         $name = $filename . '_' . time() . '.' . $extension;
 
-      User::create($input);
+         Storage::disk('s3')->put($name, fopen($file, 'r+'), 'public');
 
-      Session::flash('user_created', 'Successfully created user');
-      return redirect()->back();
+         $photo = Photo::create(['file'=>$name]);
+
+
+         $input['photo_id'] = $photo->id;
+       }
+
+       $input['password'] = bcrypt($request->password);
+
+       User::create($input);
+
+       Session::flash('user_created', 'User successfully created');
+
+       return redirect()->back();
     }
 
+
     public function userProfile($id){
-      $posts = Post::paginate();
       $user = Auth::user();
+      $posts = $user->posts;
       $blog_categories = Category::pluck('name', 'id')->all();
       $categories = Category::all();
-      return view('user_profile', compact('user', 'categories', 'blog_categories', 'posts'));
+      $url = $user->photo ? Storage::disk('s3')->url($user->photo->file) : 'http://placehold.it/165x165';
+      return view('user_profile', compact('user', 'categories', 'blog_categories', 'posts', 'url'));
     }
 }

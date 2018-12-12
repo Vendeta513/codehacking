@@ -14,7 +14,7 @@
 
     </div>
     <div class="form-group">
-      <input type="submit" class="btn btn-primary" name="multiple_remove">
+      <input type="submit" class="btn btn-primary">
     </div>
 
     <table class="table">
@@ -32,14 +32,8 @@
             <tr>
               <td> <input type="checkbox" class="checkBoxes" name="checkBoxArray[]" value="{{$photo->id}}"> </td>
               <td>{{$photo->id}}</td>
-              <td><img height="50" src="{{$photo->file}}" alt=""></td>
+              <td><img height="50" src="{{$photo ? Storage::disk('s3')->url($photo->file) : 'http://placehold.it/65x65'}}" alt=""></td>
               <td>{{$photo->created_at ? $photo->created_at : 'no date'}}</td>
-              {{-- <td>
-                <input type="hidden" name="image_id" value="{{$photo->id}}">
-                <div class="form-group">
-                  <input type="submit" name="single_remove" value="Delete Picture" class="btn btn-danger">
-                </div>
-              </td> --}}
             </tr>
 
           @endforeach

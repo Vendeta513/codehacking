@@ -20,7 +20,7 @@
       <hr>
 
       <!-- Preview Image -->
-      <img class="img-responsive" src="{{$post->photo ? $post->photo->file : 'http://placehold.it/900x300'}}" alt="">
+      <img class="img-responsive" src="{{$url}}" alt="">
 
       <hr>
 
@@ -60,7 +60,7 @@
           <!-- Comment -->
           <div class="media">
             <a class="pull-left" href="#">
-              <img class="media-object" height="64" src="{{$comment->photo }} " alt="">
+              <img class="media-object" height="64" src="{{$comment->photo ? Storage::disk('s3')->url($comment->photo) : 'http://placehold.it/64x64' }} " alt="">
             </a>
             <div class="media-body">
               <h4 class="media-heading">{{$comment->author}}
@@ -100,7 +100,7 @@
                     <!-- Nested Comment -->
                     <div class="media">
                       <a class="pull-left" href="#">
-                        <img height="64" class="media-object" src="{{$reply->photo}}" alt="">
+                        <img height="64" class="media-object" src="{{$reply->photo ? Storage::disk('s3')->url($reply->photo) : 'http://placehold.it/64x64'}}" alt="">
                       </a>
                       <div class="media-body">
                         <h4 class="media-heading">{{$reply->author}}

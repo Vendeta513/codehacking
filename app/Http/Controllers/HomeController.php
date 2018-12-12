@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Comment;
 use App\Category;
@@ -38,9 +39,8 @@ class HomeController extends Controller
       $user = Auth::user();
       $categories = Category::all();
       $post = Post::findBySlugOrFail($slug);
-
+      $url = $post->photo ? Storage::disk('s3')->url($post->photo->file) : 'http://placehold.it/900x300';
       $comments = $post->comments()->where('is_active', 1)->get();
-
-      return view('post', compact('categories', 'post', 'comments', 'user'));
+      return view('post', compact('categories', 'post', 'comments', 'user', 'url'));
     }
 }

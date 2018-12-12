@@ -11,11 +11,11 @@
         <p class="lead">
           by {{$post->user->name}}
         </p>
-        <p><span class="glyphicon glyphicon-time"></span> Posted on {{$post->created_at->diffForHumans()}}</p>
+        <p><span class="glyphicon glyphicon-time"></span> Posted {{$post->created_at->diffForHumans()}}</p>
         <hr>
-        <img class="img-responsive" src="{{$post->photo ? $post->photo->file : "http://placehold.it/900x300" }}" alt="">
+        <img class="img-responsive" src="{{$post->photo ? Storage::disk('s3')->url($post->photo->file) : "http://placehold.it/900x300" }}" alt="">
         <hr>
-        <p>{!! str_limit($post->body, 15, '(...)') !!}</p>
+        <p>{!! str_limit($post->body, 45, '(...)') !!}</p>
         <a class="btn btn-primary" href="{{route('blog.post', $post->slug)}}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
 
         <hr>

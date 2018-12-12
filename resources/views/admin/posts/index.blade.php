@@ -36,7 +36,7 @@
         @foreach ($posts as $post)
           <tr>
             <td>{{$post->id}}</td>
-            <td><img height="50" src="{{$post->photo ? $post->photo->file : 'https://via.placeholder.com/400'}}" alt=""></td>
+            <td><img height="50" src="{{$post->photo ? Storage::disk('s3')->url($post->photo->file) : 'https://via.placeholder.com/400'}}" alt=""></td>
             <td> <a href="{{route('admin.posts.edit', $post->id)}}"> {{$post->title}}</a></td>
             <td>{{$post->user->name}}</td>
             <td>{{$post->category ? $post->category->name : 'no category'}}</td>

@@ -8,13 +8,14 @@
   			<div class="profile-sidebar">
   				<!-- SIDEBAR USERPIC -->
   				<div class="profile-userpic">
-  					<img src="{{$user->photo ? $user->photo->file : 'http://placehold.it/165x165'}}" class="img-responsive img-rounded" alt="">
+  					{{-- <img src="{{$user->photo ? $user->photo->file : 'http://placehold.it/165x165'}}" class="img-responsive img-rounded" alt=""> --}}
+            <img height="150" src="{{$url}}" class="img-response img-rounded" alt="">
   				</div>
   				<!-- END SIDEBAR USERPIC -->
   				<!-- SIDEBAR USER TITLE -->
   				<div class="profile-usertitle text-left">
   					<div class="profile-usertitle-name">
-  						<h2>{{$user->name}}</h2>
+  						<h3>{{$user->name}}</h3>
   					</div>
   					<div class="profile-usertitle-job">
   						<strong>{{$user->role->name}}</strong>
@@ -103,7 +104,7 @@
 
                       <p ><span class="glyphicon glyphicon-time"></span>Posted on {{$post->created_at->format('M d Y')}}</p>
                       <hr>
-                      <img class="img-responsive" src="{{$post->photo ? $post->photo->file : 'http://placehold.it/900x300'}}" alt="">
+                      <img class="img-responsive" src="{{$post->photo ? Storage::disk('s3')->url($post->photo->file) : 'http://placehold.it/900x300'}}" alt="">
                       <hr>
                       <p>{!! $post->body !!}</p>
                       <a class="btn btn-primary" href="{{route('blog.post', $post->slug)}}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>

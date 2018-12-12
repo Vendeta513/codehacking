@@ -30,7 +30,7 @@
                     </div>
                     <div class="form-group">
                       {!! Form::label('is_active', 'Status') !!}
-                      {!! Form::select('is_active', [0=>'Active', 1=>'Not Active'], 0, ['class'=>'form-control']) !!}
+                      {!! Form::select('is_active', [1=>'Active', 0=>'Not Active'], 0, ['class'=>'form-control']) !!}
                     </div>
                     <div class="form-group">
                       {!! Form::label('password', 'Password') !!}

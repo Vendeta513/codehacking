@@ -3,11 +3,11 @@
 @section('content')
 
   @include('includes.tinyEditor')
-  
+
   <h1>Edit Post</h1>
 
   <div class="col-sm-3">
-    <img src="{{$post->photo ? $post->photo->file : 'https://via.placeholder.com/400'}}" alt="" class="img-responsive">
+    <img src="{{$url}}" alt="" class="img-responsive">
   </div>
 
 
