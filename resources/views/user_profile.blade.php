@@ -100,7 +100,7 @@
                   @if ($posts)
                     @foreach ($posts as $post)
                       <hr>
-                      <h3> <a href="#">{{$post->title}}</a> </h3>
+                      <h3> <a href="{{route('blog.post', $post->slug)}}">{{$post->title}}</a> </h3>
 
                       <p ><span class="glyphicon glyphicon-time"></span>Posted on {{$post->created_at->format('M d Y')}}</p>
                       <hr>

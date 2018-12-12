@@ -3,6 +3,8 @@
 
 @section('content')
   <div class="col-md-8">
+    <h1>Blog Posts Wall</h1>
+    <hr>
     @if ($posts)
       @foreach ($posts as $post)
         <h2>

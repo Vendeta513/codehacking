@@ -4,7 +4,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<title>Blog Home - Start Bootstrap Template</title>
+<title>Blog Home - Codehacking</title>
 
 <!-- Bootstrap Core CSS -->
 <link rel="stylesheet" href="{{asset('css/libs.css')}}">
