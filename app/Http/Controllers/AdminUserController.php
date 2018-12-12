@@ -115,12 +115,6 @@ class AdminUserController extends Controller
       $input = $request->all();
 
       if($file = $request->file('photo_id')){
-        if($user->photo_id != 0){
-          $photo_id = $user->photo_id;
-          $photo = Photo::findOrFail($photo_id);
-          Storage::disk('s3')->delete($user->photo->file);
-          $photo->delete();
-        }
         $filewithExtension = $file->getClientOriginalName();
         $filename = pathinfo($filewithExtension, PATHINFO_FILENAME);
         $extension = $file->getClientOriginalExtension();
